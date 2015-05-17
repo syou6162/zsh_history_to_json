@@ -1,0 +1,16 @@
+#!/usr/local/bin/zsh
+
+# curl -XPUT localhost:9200/zsh_history -d '{
+#   "mappings": {
+#     "command": {
+#       "properties": {
+#         "date": { "type": "date", "format": "yyyy-MM-dd HH:mm Z" },
+#         "command" : { "type": "string", "index": "not_analyzed" }
+#       }
+#     }
+#   }
+# }'
+
+source ~/.zshrc
+fc -R
+fc -l -i -D 1 | ruby zsh_history_to_json.rb | curl -s -XPOST localhost:9200/_bulk --data-binary @-
